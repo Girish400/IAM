@@ -4,6 +4,8 @@
   <img src="https://learn.microsoft.com/en-us/media/learn/certification/badges/microsoft-certified-associate-badge.svg" alt="Microsoft Certified Associate badge" width="180">
 </p>
 
+> **[Take the SC-300 practice exam](https://girish400.github.io/IAM/)** · 50 multiple-choice questions with answer explanations and downloadable score history.
+
 ## Overview
 
 This repository is a study workspace for the **Microsoft Certified: Identity and Access Administrator Associate** certification and its SC-300 exam. Use it to organize study notes, review the exam syllabus, and build flash cards for Microsoft Entra identity and access administration.
@@ -25,3 +27,7 @@ See the [official SC-300 study guide](https://learn.microsoft.com/en-us/credenti
 
 - [Study guide](Study%20guide/README.md)
 - [Flash cards](Flash%20card/README.md)
+- [Exam and score records](exam/README.md)
+- [SC-300 practice exam website](website/README.md)
+
+The practice exam includes 50 original questions across the four skills measured. See the website README for local setup and how score history is stored and exported.

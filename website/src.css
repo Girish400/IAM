@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #172a3a;
+  --color-paper: #f4f7f9;
+  --color-teal: #007f86;
+  --color-teal-dark: #00666d;
+  --color-line: #dce5ea;
+  --color-muted: #60717e;
+}
+
+:root { color-scheme: light; }
+html { scroll-behavior: smooth; }
+body { min-width: 320px; }
+button, a, input { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid #f2a900; outline-offset: 3px; }
+::selection { background: #b9e5e4; color: #172a3a; }
+.option-card { transition: border-color .16s ease, background-color .16s ease, transform .16s ease; }
+.option-card:hover { transform: translateY(-1px); }
+.option-card[aria-checked="true"] { border-color: #007f86; background: #e9f7f6; box-shadow: 0 0 0 1px #007f86; }
+.question-dot[aria-current="step"] { background: #007f86; color: white; border-color: #007f86; }
+.question-dot[data-answered="true"]:not([aria-current="step"]) { border-color: #007f86; color: #00666d; background: #e9f7f6; }
+.question-dot[data-flagged="true"]::after { content: ""; position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; border-radius: 999px; background: #f2a900; border: 1px solid white; }
+.meter-fill { transition: width .25s ease; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
