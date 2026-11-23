@@ -59,6 +59,11 @@ function renderQuestion() {
   $("question-skill").textContent = question.skill;
   $("question-number").textContent = `QUESTION ${String(state.index + 1).padStart(2, "0")} / ${questions.length}`;
   $("question-text").textContent = question.question;
+  const hint = $("hint-text");
+  hint.textContent = question.hint;
+  hint.classList.add("hidden");
+  $("hint-button").setAttribute("aria-expanded", "false");
+  $("hint-button").textContent = "Show hint";
   $("flag-button").setAttribute("aria-pressed", String(state.flagged.includes(state.index)));
   $("flag-button").textContent = state.flagged.includes(state.index) ? "★ Marked for review" : "☆ Mark for review";
   $("previous-button").disabled = state.index === 0;
@@ -245,11 +250,17 @@ $("start-button").addEventListener("click", () => startExam());
 $("previous-button").addEventListener("click", () => goTo(state.index - 1));
 $("next-button").addEventListener("click", () => goTo(state.index + 1));
 $("flag-button").addEventListener("click", toggleFlag);
+$("hint-button").addEventListener("click", () => {
+  const isExpanded = $("hint-button").getAttribute("aria-expanded") === "true";
+  $("hint-button").setAttribute("aria-expanded", String(!isExpanded));
+  $("hint-button").textContent = isExpanded ? "Show hint" : "Hide hint";
+  $("hint-text").classList.toggle("hidden", isExpanded);
+});
 $("submit-button").addEventListener("click", finishExam);
 $("download-score").addEventListener("click", downloadHistory);
 $("retake-button").addEventListener("click", () => startExam(true));
 
-if (questions.length !== 50 || questions.some((question) => question.options.length !== 4 || question.answer < 0 || question.answer > 3)) {
+if (questions.length !== 250 || questions.some((question) => question.options.length !== 4 || question.answer < 0 || question.answer > 3 || !question.hint?.trim())) {
   throw new Error("The practice exam question data is incomplete or invalid.");
 }
 if (validSavedAttempt(readJSON(STORAGE_KEY, null))) $("start-button").firstChild.textContent = "Resume saved practice exam ";

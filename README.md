@@ -4,7 +4,7 @@
   <img src="https://learn.microsoft.com/en-us/media/learn/certification/badges/microsoft-certified-associate-badge.svg" alt="Microsoft Certified Associate badge" width="180">
 </p>
 
-> **[Take the SC-300 practice exam](https://girish400.github.io/IAM/)** · 50 multiple-choice questions with answer explanations and downloadable score history.
+> **[Take the SC-300 practice exam](https://girish400.github.io/IAM/)** · 250 multiple-choice questions, per-question hints, answer explanations, and downloadable score history.
 
 ## Overview
 
@@ -30,4 +30,4 @@ See the [official SC-300 study guide](https://learn.microsoft.com/en-us/credenti
 - [Exam and score records](exam/README.md)
 - [SC-300 practice exam website](website/README.md)
 
-The practice exam includes 50 original questions across the four skills measured. See the website README for local setup and how score history is stored and exported.
+The practice exam includes 250 original questions across the four skills measured, with a hint available on each question. See the website README for local setup and how score history is stored and exported.
