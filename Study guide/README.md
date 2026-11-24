@@ -1,5 +1,5 @@
-# Study guide
+# CISSP study notes
 
-Use this folder for SC-300 study notes, topic summaries, and hands-on lab materials.
+Use this folder for CISSP study notes, topic summaries, and hands-on lab materials.
 
-Start with the [official Microsoft SC-300 study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-300).
+The website's Resources section includes the supplied [CISSP domain objectives and reference index](../CISSP-Study-Resources-main/README.md).

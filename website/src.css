@@ -20,6 +20,8 @@ button, a, input { -webkit-tap-highlight-color: transparent; }
 .option-card { transition: border-color .16s ease, background-color .16s ease, transform .16s ease; }
 .option-card:hover { transform: translateY(-1px); }
 .option-card[aria-checked="true"] { border-color: #007f86; background: #e9f7f6; box-shadow: 0 0 0 1px #007f86; }
+.nav-button { color: #60717e; }
+.nav-button:hover, .nav-button.nav-active { color: #00666d; background: #e9f7f6; }
 .question-dot[aria-current="step"] { background: #007f86; color: white; border-color: #007f86; }
 .question-dot[data-answered="true"]:not([aria-current="step"]) { border-color: #007f86; color: #00666d; background: #e9f7f6; }
 .question-dot[data-flagged="true"]::after { content: ""; position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; border-radius: 999px; background: #f2a900; border: 1px solid white; }

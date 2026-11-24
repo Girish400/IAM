@@ -1,3 +1,3 @@
-# Flash cards
+# CISSP flash cards
 
-Use this folder to collect question-and-answer cards for reviewing SC-300 concepts.
+The CISSP Study Hub includes 80 question-and-answer flash cards across all eight domains. Open the site's **Flash Cards** section to study them.

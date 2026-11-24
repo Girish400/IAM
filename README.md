@@ -1,33 +1,24 @@
-# Microsoft Certified: Identity and Access Administrator Associate
+# CISSP Study Hub
 
-<p align="center">
-  <img src="https://learn.microsoft.com/en-us/media/learn/certification/badges/microsoft-certified-associate-badge.svg" alt="Microsoft Certified Associate badge" width="180">
-</p>
+> **[Open the CISSP study website](https://girish400.github.io/IAM/)** · 80 original multiple-choice questions (10 per domain), domain reviews, study resources, and flash cards.
 
-> **[Take the SC-300 practice exam](https://girish400.github.io/IAM/)** · 250 multiple-choice questions, per-question hints, answer explanations, and downloadable score history.
+This repository contains an independent CISSP study website and the supplied study resources. The practice questions are original study material and are not official (ISC)² exam items.
 
-## Overview
+## Website
 
-This repository is a study workspace for the **Microsoft Certified: Identity and Access Administrator Associate** certification and its SC-300 exam. Use it to organize study notes, review the exam syllabus, and build flash cards for Microsoft Entra identity and access administration.
+- [Take the practice exam](https://girish400.github.io/IAM/)
+- Browse all eight CISSP domains, their ten questions and answers, and explanations.
+- Study with 80 question-and-answer flash cards.
+- Access the supplied study guides, archived objectives, resource index, and license from Resources.
 
-## Syllabus
+## Local development
 
-The SC-300 skills measured, effective October 28, 2026, are:
+```sh
+cd website
+npm ci
+npm run verify:questions
+npm run build
+npm run dev
+```
 
-| Skill area | Exam weight |
-| --- | ---: |
-| Implement and manage user identities | 20–25% |
-| Implement authentication and access management | 25–30% |
-| Plan and implement workload identities | 20–25% |
-| Plan and automate identity governance | 20–25% |
-
-See the [official SC-300 study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-300#skills-at-a-glance) for the detailed objectives and updates.
-
-## Study materials
-
-- [Study guide](Study%20guide/README.md)
-- [Flash cards](Flash%20card/README.md)
-- [Exam and score records](exam/README.md)
-- [SC-300 practice exam website](website/README.md)
-
-The practice exam includes 250 original questions across the four skills measured, with a hint available on each question. See the website README for local setup and how score history is stored and exported.
+GitHub Pages deployment is configured in `.github/workflows/pages.yml`. Exam progress is stored locally in the browser; the static site does not collect personal information or write visitor results to the repository.
