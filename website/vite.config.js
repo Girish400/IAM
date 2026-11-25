@@ -5,6 +5,6 @@ export default defineConfig({
   build: {
     outDir: "dist",
     emptyOutDir: true,
-    rollupOptions: { input: ["index.html", "domain1-study.html"] }
+    rollupOptions: { input: ["index.html", ...Array.from({ length: 8 }, (_, index) => `domain${index + 1}-study.html`)] }
   }
 });

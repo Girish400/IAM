@@ -11,10 +11,9 @@ function inline(value) {
 }
 const slug = (value) => value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-function renderMarkdown(source) {
+function renderMarkdown(source, quiz) {
   source = moveGlossaryToEnd(source);
   const cards = readFlashCards(source);
-  const quiz = readQuestions(source);
   const lines = source.replaceAll("\r", "").split("\n");
   const out = [];
   const headings = [];
@@ -105,7 +104,15 @@ function readFlashCards(source) {
   });
 }
 
-function readQuestions(source) {
+function readQuestions(source, externalQuestions = []) {
+  if (externalQuestions.length) return externalQuestions.map((q, index) => ({
+    number: index + 1,
+    prompt: q.question,
+    options: q.options,
+    answer: q.answer,
+    multiple: q.multiple,
+    rationale: q.explanation,
+  }));
   const start = source.indexOf("### Questions");
   const end = source.indexOf("### Answer key and rationales", start);
   const qLines = source.slice(start, end).split("\n");
@@ -135,8 +142,8 @@ function renderFlashCards(cards) {
 }
 
 function renderExam(questions) {
-  const questionMarkup = questions.map((q) => `<fieldset class="exam-question" data-question="${q.number}"><legend><span class="question-number">${String(q.number).padStart(2, "0")}</span>${inline(q.prompt)}</legend><div class="exam-options">${q.options.map(({ letter, text }) => `<label class="exam-option"><input type="radio" name="q${q.number}" value="${letter}"><span class="option-letter">${letter}</span><span>${inline(text)}</span></label>`).join("")}</div><div class="question-feedback" aria-live="polite"></div></fieldset>`).join("");
-  return `<section class="exam-panel" aria-label="Domain 1 multiple-choice exam"><div class="exam-toolbar"><div><strong>Domain 1 practice exam</strong><span>${questions.length} questions · one attempt at a time</span></div><div class="exam-progress"><span id="exam-progress-label">0 / ${questions.length} answered</span><span class="progress-track"><i id="exam-progress-fill"></i></span></div></div><button id="start-exam" class="exam-primary" type="button">Start exam <span aria-hidden="true">→</span></button><form id="domain1-exam" class="exam-form" hidden><div class="exam-question-list">${questionMarkup}</div><div class="exam-submit-row"><span id="exam-answered">0 of ${questions.length} answered</span><button class="exam-primary" type="submit">Submit exam</button></div></form><section id="exam-results" class="exam-results" aria-live="polite" hidden></section></section>`;
+  const questionMarkup = questions.map((q) => `<fieldset class="exam-question" data-question="${q.number}"><legend><span class="question-number">${String(q.number).padStart(2, "0")}</span>${inline(q.prompt)}${q.multiple ? " <small>Select all that apply.</small>" : ""}</legend><div class="exam-options">${q.options.map(({ letter, text }) => `<label class="exam-option"><input type="${q.multiple ? "checkbox" : "radio"}" name="q${q.number}" value="${letter}"><span class="option-letter">${letter}</span><span>${inline(text)}</span></label>`).join("")}</div><div class="question-feedback" aria-live="polite"></div></fieldset>`).join("");
+  return `<section class="exam-panel" aria-label="Domain ${domainNumber} multiple-choice exam"><div class="exam-toolbar"><div><strong>Domain ${domainNumber} practice exam</strong><span>${questions.length} questions · one attempt at a time</span></div><div class="exam-progress"><span id="exam-progress-label">0 / ${questions.length} answered</span><span class="progress-track"><i id="exam-progress-fill"></i></span></div></div><button id="start-exam" class="exam-primary" type="button">Start exam <span aria-hidden="true">→</span></button><form id="domain1-exam" class="exam-form" hidden><div class="exam-question-list">${questionMarkup}</div><div class="exam-submit-row"><span id="exam-answered">0 of ${questions.length} answered</span><button class="exam-primary" type="submit">Submit exam</button></div></form><section id="exam-results" class="exam-results" aria-live="polite" hidden></section></section>`;
 }
 
 function boxNotes(root) {
@@ -181,17 +188,16 @@ function initStudyInteractions() {
     event.preventDefault();
     let score = 0;
     questions.forEach((question, index) => {
-      const selected = question.querySelector("input:checked")?.value;
-      const correct = quizAnswerFor(question.dataset.question);
+      const selected = [...question.querySelectorAll("input:checked")].map((input) => input.value).sort();
+      const correct = quizAnswerFor(question.dataset.question).slice().sort();
       const feedback = question.querySelector(".question-feedback");
-      const correctOption = question.querySelector(`input[value="${correct}"]`)?.closest("label");
-      correctOption?.classList.add("is-correct");
-      if (selected === correct) { score += 1; question.classList.add("answered-correct"); }
+      correct.forEach((letter) => question.querySelector(`input[value="${letter}"]`)?.closest("label")?.classList.add("is-correct"));
+      if (selected.join(",") === correct.join(",")) { score += 1; question.classList.add("answered-correct"); }
       else {
         question.classList.add("answered-incorrect");
-        question.querySelector(`input[value="${selected}"]`)?.closest("label")?.classList.add("is-incorrect");
+        selected.filter((letter) => !correct.includes(letter)).forEach((letter) => question.querySelector(`input[value="${letter}"]`)?.closest("label")?.classList.add("is-incorrect"));
       }
-      feedback.innerHTML = `<strong>Correct answer: ${correct}.</strong> ${inline(examQuestions[index].rationale)}`;
+      feedback.innerHTML = `<strong>Correct answer: ${correct.join(", ")}.</strong> ${inline(examQuestions[index].rationale)}`;
       question.querySelectorAll("input").forEach((input) => { input.disabled = true; });
     });
     const percent = Math.round(score / questions.length * 100);
@@ -217,12 +223,27 @@ function initStudyInteractions() {
 }
 
 let examQuestions = [];
-function quizAnswerFor(number) { return examQuestions.find((question) => question.number === Number(number))?.answer; }
+const domainNumber = Number(location.pathname.match(/domain(\d+)-study/)?.[1] || 1);
+const domainNames = { 1: "Security and Risk Management", 2: "Asset Security", 3: "Security Architecture and Engineering", 4: "Communication and Network Security", 5: "Identity and Access Management", 6: "Security Assessment and Testing", 7: "Security Operations", 8: "Software Development Security" };
+function quizAnswerFor(number) { return examQuestions.find((question) => question.number === Number(number))?.answer || []; }
 
-fetch("./resources/domain1-study-guide.md")
-  .then((response) => { if (!response.ok) throw new Error("Study guide is unavailable."); return response.text(); })
-  .then((source) => { examQuestions = readQuestions(source); renderMarkdown(source); initStudyInteractions(); })
-  .catch(() => { content.innerHTML = '<div class="load-error"><h1>Study guide unavailable</h1><p>Try again in a moment, or <a href="./resources/domain1-study-guide.md">open the guide text directly</a>.</p></div>'; });
+document.querySelector(".eyebrow").innerHTML = `<span class="eyebrow-dot"></span> CISSP · DOMAIN ${String(domainNumber).padStart(2, "0")}`;
+document.querySelector(".hero h1").innerHTML = `${domainNames[domainNumber]}<br><em>Study Guide</em>`;
+document.querySelector(".hero-copy").textContent = "Review the domain objectives, build recall with interactive cards, then take the complete chapter-mapped exam and review your score and rationales.";
+document.title = `Domain ${domainNumber} Study Guide | CISSP Study Hub`;
+const guidePath = `./resources/domain${domainNumber}-study-guide.md`;
+Promise.all([
+  fetch(guidePath).then((response) => { if (!response.ok) throw new Error("Study guide is unavailable."); return response.text(); }),
+  fetch("./resources/domain-question-bank.json").then((response) => { if (!response.ok) throw new Error("Question bank is unavailable."); return response.json(); }),
+]).then(([source, bank]) => {
+  examQuestions = readQuestions(source, bank.domains[String(domainNumber)] || []);
+  renderMarkdown(source, examQuestions);
+  const stats = document.querySelectorAll(".hero-stats strong");
+  stats[0].textContent = (source.match(/^#{2,3}\s+\d+\.\d+(?:\s|$)/gm) || []).length;
+  stats[1].textContent = readFlashCards(source).length;
+  stats[2].textContent = examQuestions.length;
+  initStudyInteractions();
+}).catch(() => { content.innerHTML = `<div class="load-error"><h1>Study guide unavailable</h1><p>Try again in a moment, or <a href="${guidePath}">open the guide text directly</a>.</p></div>`; });
 
 const progress = document.querySelector("#progress-fill");
 function updateProgress() {

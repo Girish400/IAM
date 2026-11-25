@@ -1,6 +1,6 @@
 # CISSP Study Hub website
 
-Static study site with an 80-question practice exam (10 per CISSP domain), domain review pages, supplied study resources, and 80 answer flash cards. The Resources page also links a Domain 1 exam-ready guide covering every objective, a glossary, 40 flash cards, and 40 original multiple-choice questions with rationales.
+Static CISSP study site with eight exam-ready domain guides. Each guide includes objective notes, interactive flip cards, all source review questions mapped to its domain, score reporting, answer rationales, and a domain-specific glossary. The supplied notes contain 420 review questions across 21 chapter sets; the domain totals are 100, 20, 80, 40, 40, 20, 80, and 40.
 
 ## Run locally
 
